@@ -88,7 +88,8 @@ def handle_client(conn, addr, gato):
         except:
             break
 
-    gato.CURRENT_SCREEN = 0 # reset the UI to the 1st screen
+    gato.CURRENT_SCREEN = 1
+    gato.reset()
 
     print(f"[-] Disconnected from: {addr}")
     peers.remove(conn)

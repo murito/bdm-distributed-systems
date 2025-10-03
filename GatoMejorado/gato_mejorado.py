@@ -20,24 +20,42 @@ class Gato:
         self.screen_three = None
         self.screen_game = None
         self.screen_final = None
-        self.CURRENT_SCREEN = 0
         self.label_self_port = None
         self.label_remote_ip = None
         self.label_remote_port = None
         self.connection = [0,0,0]
-        self.player = 0 # 1 - X, 2 - O
         self.label_player = None
         self.label_turn = None
+        self.CURRENT_SCREEN = 0
+        self.player = 0  # 1 - X, 2 - O
         self.turn = False
         self.winner = 0
-        self.game_state_bits = 0 ## Our data bits
+        self.game_state_bits = 0  ## Our data bits
         self.game_state = [
             [0, 0, 0],
             [0, 0, 0],
             [0, 0, 0]
         ]
 
+    def reset(self):
+        self.player = 0  # 1 - X, 2 - O
+        self.turn = False
+        self.winner = 0
+        self.game_state_bits = 0  ## Our data bits
+        self.game_state = [
+            [0, 0, 0],
+            [0, 0, 0],
+            [0, 0, 0]
+        ]
+
+        if self.screen is not None:
+            self.label_remote_ip.update("Remote IP:")
+            self.label_remote_port.update("Remote Port:")
+            self.label_player.update("Player:")
+            self.label_turn.update("Turno:")
+
     def on_init(self):
+        self.reset()
         pygame.init()
         pygame.display.set_caption("Gato # - Game")
         self.clock = pygame.time.Clock()
