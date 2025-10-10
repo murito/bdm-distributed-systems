@@ -15,6 +15,7 @@ def json_packet(identifier, sender, players, color, x, y, direction, ip, port, c
         "direction": direction,
         "ip": ip,
         "port": port,
+        "is_evil": False,
         "outgoing_player": outgoing_player,
         "coin_initial_position": f"{cx},{cy}"
     }

@@ -179,6 +179,8 @@ class GameScene(Scene):
         # get x and y to position  players
         start_x, start_y = self.game_logic.find_spawn(board, BOARD_OFFSET_X, BOARD_OFFSET_Y, TILE_SIZE)
 
+        self.coin_timer = None
+
         # instances of players
         self.players = []
         self.players_rendered = []
@@ -194,7 +196,7 @@ class GameScene(Scene):
             self.players.append(p)
 
         # Coin
-        self.coin = Coin(tile_size=24, board_offset_x=BOARD_OFFSET_X, board_offset_y=BOARD_OFFSET_Y)
+        self.coin = Coin(self.game, tile_size=24, board_offset_x=BOARD_OFFSET_X, board_offset_y=BOARD_OFFSET_Y)
         self.coin.set_position(self.game.coin_initial_position)
 
     def events(self, events):
@@ -203,6 +205,11 @@ class GameScene(Scene):
     def update(self, dt):
         if self.game.players_joined < MIN_PLAYERS:
             self.game.change_scene(WaitingPeersScene(self.game))
+
+        # update coin if it has changed its position
+        cx, cy = self.coin.position
+        if self.game.coin_initial_position != (cx, cy):
+            self.coin.set_position(self.game.coin_initial_position)
 
         # remove player that left the game
         for player in self.players_rendered:
@@ -223,14 +230,31 @@ class GameScene(Scene):
                 p = Pacman(peer_players[player]['id'], self.game, start_x, start_y, color=(int(r), int(g), int(b)),
                            speed=2, controlled_locally=(peer_players[player]['id'] == self.game.whoami))
                 self.players.append(p)
-
                 self.players_rendered.append(peer_players[player]['id'])
 
-        # control remote players here
+        # loop over players
         for player in self.players:
+            # Local player coin collision
+            if player.controlled_locally:
+                self.game_logic.player_coin_collision(self, player, player.x, player.y)
+
+            # control remote players here
             if not player.controlled_locally:
                 remote_data = get_json_by_id(peer_players, player.id)
                 player.set_position(remote_data[0]['x'], remote_data[0]['y'], remote_data[0]['direction'])
+
+                # remote player coin collision
+                self.game_logic.player_coin_collision(self, player, int(remote_data[0]['x']), int(remote_data[0]['y']))
+
+        self.game_logic.check_player_collisions(self)
+
+        # new place for coin
+        if self.game.whoami == 'server':
+            if self.coin_timer is not None:
+                self.coin_timer -= self.game.clock.get_time()
+                if self.coin_timer <= 0:
+                    self.coin_timer = None
+                    self.coin.place_random(board)
 
     def draw(self, display):
         display.fill((0, 0, 0))

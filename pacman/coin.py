@@ -1,11 +1,15 @@
 import pygame, random
+from p2p_helpers import packet_data
+from p2p_node import broadcast_message
 
 class Coin(pygame.sprite.Sprite):
-    def __init__(self, x=0, y=0, frame_rate=100,
+    def __init__(self, pacman, x=0, y=0, frame_rate=100,
                  tile_size=24, board_offset_x=0, board_offset_y=0):
         super().__init__()
 
+        self.pacman = pacman
         self.position = (x, y)
+        self.visible = True
 
         # Parámetros de tablero
         self.tile_size = tile_size
@@ -41,6 +45,13 @@ class Coin(pygame.sprite.Sprite):
                 self.frames.append(frame)
 
     def update(self):
+        x,y = self.position
+        if x == -10 and y == -10:
+            self.visible = False
+            return
+        else:
+            self.visible = True
+
         """Actualiza la animación."""
         now = pygame.time.get_ticks()
         if now - self.last_update > self.frame_rate:
@@ -50,13 +61,15 @@ class Coin(pygame.sprite.Sprite):
 
     def draw(self, surface):
         """Dibuja la moneda en la superficie indicada."""
-        surface.blit(self.image, self.rect)
+        if self.visible:
+            surface.blit(self.image, self.rect)
 
     def set_position(self, position):
         self.position = position
         self.rect.topleft = position
+        self.pacman.coin_initial_position = position
 
-    def place_random(self, board):
+    def place_random(self, board, player=None):
         """Coloca la moneda en una celda vacía ('0') considerando el offset del tablero."""
         empty_cells = [
             (col_idx, row_idx)
@@ -73,5 +86,21 @@ class Coin(pygame.sprite.Sprite):
             self.board_offset_x + col * self.tile_size,
             self.board_offset_y + row * self.tile_size
         )
+
+        self.pacman.coin_initial_position = pos
         self.rect.topleft = pos
         self.position = pos
+
+        # inform the new position
+        try:
+            cx, cy = pos
+            msg =  {
+                "id": "server",
+                "from": "server",
+                "coin_position": f"{cx},{cy}",
+                "outgoing_player": False
+            }
+            pkt = packet_data(msg)
+            broadcast_message(pkt)
+        except Exception as e:
+            print(e)

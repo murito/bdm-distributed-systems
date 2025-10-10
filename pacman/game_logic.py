@@ -62,3 +62,32 @@ class GameLogic:
                     if col_idx < len(row) - 1 and row[col_idx + 1] == "0":
                         pygame.draw.line(surface, (0, 0, 255), (x + TILE_SIZE, y), (x + TILE_SIZE, y + TILE_SIZE), 2)
 
+
+    def player_coin_collision(self, scene, player, posx, posy):
+        cx, cy = scene.coin.position
+        if (posx - (TILE_SIZE / 2)) == cx and (posy - (TILE_SIZE / 2)) == cy:
+            # pacman becomes evil
+            player.activate_evil_mode(7000)
+
+            # Get the coin out of the scene
+            scene.coin.set_position((-10, -10))
+
+            # Timer to get the coin in scene again
+            scene.coin_timer = 6000
+
+    def check_player_collisions(self, scene):
+        """Verifica si algún jugador colisionó con otro."""
+        for i, p1 in enumerate(scene.players):
+            for j, p2 in enumerate(scene.players):
+                if i >= j:
+                    continue  # evita comparar el mismo par dos veces
+                if p1.x == p2.x and p1.y == p2.y:
+                    self.on_player_collision(p1, p2)
+
+    def on_player_collision(self, player1, player2):
+        """Acción al detectar una colisión entre jugadores."""
+
+        if player1.is_evil and not player2.is_evil:
+            print(f"{player2.id} fue atrapado por {player1.id}!")
+        elif player2.is_evil and not player1.is_evil:
+            print(f"{player1.id} fue atrapado por {player2.id}!")

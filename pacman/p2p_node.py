@@ -80,6 +80,11 @@ def handle_client(conn, addr, pacman):
 
             # Messages send by server
             if json_data['from'] == "server":
+                if json_data.get('coin_position') is not None:
+                    print(json_data)
+                    position = json_data.get('coin_position').split(",")
+                    pacman.coin_initial_position = (int(position[0]), int(position[1]))
+
                 # Filter the guy that left the game
                 if bool(json_data['outgoing_player']):
                     new_data = [item for item in peer_players if item.get("id") != json_data['id']]
@@ -87,12 +92,13 @@ def handle_client(conn, addr, pacman):
 
                 # Initial negotiation packet
                 if pacman.whoami is None:
-                    position = json_data['coin_initial_position'].split(",")
-                    print(f"Coin: {(int(position[0]), int(position[1]))}")
-                    pacman.coin_initial_position = (int(position[0]), int(position[1]))
                     pacman.players_joined = json_data['players']
                     pacman.whoami = json_data['id']
                     pacman.my_color = json_data['color']
+
+                    # Coin has changed its place
+                    position = json_data['coin_initial_position'].split(",")
+                    pacman.coin_initial_position = (int(position[0]), int(position[1]))
 
             # Logic for both, server and client
             if player_exists(peer_players, json_data['id']):
