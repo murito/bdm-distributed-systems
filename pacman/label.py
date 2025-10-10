@@ -9,11 +9,11 @@ class Label:
         self.bg_color = bg_color
         self.is_visible = is_visible
 
-        # Fuente estilo arcade (puedes usar una fuente .ttf personalizada tipo pixel o retro)
+        # Font arcade style ( you can use a customized .ttf font, like pixel or retro)
         if font_path:
             self.font = pygame.font.Font(font_path, font_size)
         else:
-            self.font = pygame.font.SysFont(None, font_size)  # Usa una fuente retro si está instalada
+            self.font = pygame.font.SysFont(None, font_size)  # Use a retro font if it is installed
 
         self.rendered_text = self.font.render(self.text, True, self.color, self.bg_color)
         self.rect = self.rendered_text.get_rect(topleft=self.position)
@@ -28,5 +28,5 @@ class Label:
         self.rect = self.rendered_text.get_rect(topleft=self.position)
 
     def set_visible(self, visible: bool):
-        """Cambia la visibilidad del label"""
+        """Change the label visibility"""
         self.is_visible = visible

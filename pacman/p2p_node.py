@@ -83,8 +83,8 @@ def handle_client(conn, addr, pacman):
 
             # Messages send by server
             if json_data['from'] == "server":
+                print(json_data)
                 if json_data.get('coin_position') is not None:
-                    print(json_data)
                     position = json_data.get('coin_position').split(",")
                     pacman.coin_initial_position = (int(position[0]), int(position[1]))
 
@@ -114,7 +114,7 @@ def handle_client(conn, addr, pacman):
                 peer_players.append(json_data)
 
         except Exception as e:
-            print(f"===> {e}")
+            # active this line for debug print(f"===> {e}")
             break
 
     if pacman.players_joined > 1 and pacman.whoami == "server":

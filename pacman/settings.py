@@ -7,17 +7,17 @@ MIN_PLAYERS = 4
 pacman_colors = [
     (255, 0, 0),  # Red
     (0, 255, 0),  # Green
-    (0, 0, 255),  # Blue
-    (0, 255, 255),  # Cyan
     (255, 0, 255),  # Magenta
-    (255, 255, 255)  # White
+    (255, 255, 255),  # White
+    (0, 255, 255),  # Cyan
+    (0, 0, 255),  # Blue
 ]
 
 # Colores
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 
-# Tamaño de celda
+# Cell size
 OFFSET_X = 0
 OFFSET_Y = 100
 CELL_SIZE = 20
@@ -50,6 +50,6 @@ TILE_SIZE = 24
 BOARD_WIDTH = len(board[0]) * TILE_SIZE     # 504 px
 BOARD_HEIGHT = len(board) * TILE_SIZE       # 456 px
 
-# --- Centramos el tablero ---
+# --- We center the board here ---
 BOARD_OFFSET_X = (WIDTH - BOARD_WIDTH) // 2   # 48 px
 BOARD_OFFSET_Y = (HEIGHT - BOARD_HEIGHT) // 2 # 72 px

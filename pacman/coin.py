@@ -11,24 +11,24 @@ class Coin(pygame.sprite.Sprite):
         self.position = (x, y)
         self.visible = True
 
-        # Parámetros de tablero
+        # Board parameters
         self.tile_size = tile_size
         self.board_offset_x = board_offset_x
         self.board_offset_y = board_offset_y
 
-        # Animación
+        # Animation
         self.frames = []
         self.load_frames("images/coin_spritesheet.png")  # tu sprite sheet
         self.current_frame = 0
         self.image = self.frames[self.current_frame]
         self.rect = self.image.get_rect(topleft=(x, y))
 
-        # Control de tiempo
+        # Control time
         self.frame_rate = frame_rate
         self.last_update = pygame.time.get_ticks()
 
     def load_frames(self, filename):
-        """Carga y corta la hoja de sprites (2 filas × 3 columnas = 6 frames)."""
+        """Loads adn crop sprites  (2 rows × 3 cols = 6 frames)."""
         sheet = pygame.image.load(filename).convert_alpha()
         sheet_width, sheet_height = sheet.get_size()
 
@@ -52,7 +52,7 @@ class Coin(pygame.sprite.Sprite):
         else:
             self.visible = True
 
-        """Actualiza la animación."""
+        """Animatino update."""
         now = pygame.time.get_ticks()
         if now - self.last_update > self.frame_rate:
             self.last_update = now
@@ -60,7 +60,7 @@ class Coin(pygame.sprite.Sprite):
             self.image = self.frames[self.current_frame]
 
     def draw(self, surface):
-        """Dibuja la moneda en la superficie indicada."""
+        """Draw the coin in the specified surface"""
         if self.visible:
             surface.blit(self.image, self.rect)
 
@@ -70,7 +70,7 @@ class Coin(pygame.sprite.Sprite):
         self.pacman.coin_initial_position = position
 
     def place_random(self, board, player=None):
-        """Coloca la moneda en una celda vacía ('0') considerando el offset del tablero."""
+        """Put the coin in an empty cell, considering the board offset."""
         empty_cells = [
             (col_idx, row_idx)
             for row_idx, row in enumerate(board)
@@ -78,7 +78,7 @@ class Coin(pygame.sprite.Sprite):
             if cell == '0'
         ]
         if not empty_cells:
-            print("⚠️ No hay celdas vacías para colocar la moneda.")
+            print("⚠️ There are no empty cells to put the coin.")
             return
 
         col, row = random.choice(empty_cells)

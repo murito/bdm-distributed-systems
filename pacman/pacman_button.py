@@ -11,7 +11,7 @@ class PacmanButton:
         self.border_color = border_color
         self.hovered = False
 
-        # Fuente estilo arcade
+        # Font arcade style
         if font_path:
             self.font = pygame.font.Font(font_path, font_size)
         else:
@@ -20,7 +20,7 @@ class PacmanButton:
         self.rect = pygame.Rect(position, size)
 
     def draw(self, surface):
-        # Cambia color si está en hover
+        # Change the color on hover
         fill_color = (50, 50, 50) if self.hovered else self.bg_color
         pygame.draw.rect(surface, fill_color, self.rect)
         pygame.draw.rect(surface, self.border_color, self.rect, 3)
@@ -34,5 +34,5 @@ class PacmanButton:
             self.hovered = self.rect.collidepoint(event.pos)
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if self.rect.collidepoint(event.pos):
-                return True  # Acción del botón
+                return True  # Button action
         return False

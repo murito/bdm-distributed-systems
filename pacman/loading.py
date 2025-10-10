@@ -34,7 +34,7 @@ class PacmanLoadingAnimation:
     def draw(self, surface):
         surface.fill((0, 0, 0))
 
-        # Dibuja Pac-Man como un sector circular
+        # Draw a Pac-Man like a circular sector
         start_angle = math.radians(self.angle)
         end_angle = math.radians(360 - self.angle)
         points = [self.pacman_center]
@@ -44,7 +44,7 @@ class PacmanLoadingAnimation:
             points.append((x, y))
         pygame.draw.polygon(surface, self.pacman_color, points)
 
-        # Dibuja los puntos
+        # Draw the dots
         for dot in self.dots:
             pygame.draw.circle(surface, self.dot_color, dot, self.dot_radius)
 

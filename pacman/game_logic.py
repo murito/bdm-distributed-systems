@@ -9,8 +9,8 @@ class GameLogic:
 
     def find_spawn(self, board, offset_x, offset_y, tile_size):
         """
-        Busca una celda abierta ('0') cerca del centro del tablero
-        y devuelve coordenadas en píxeles (x, y).
+        Search for a open cell ('0') nearby the center of the board.
+        and return the coords in pixels (x, y).
         """
         rows = len(board)
         cols = len(board[0])
@@ -18,7 +18,7 @@ class GameLogic:
         center_r = rows // 2
         center_c = cols // 2
 
-        # Radio de búsqueda alrededor del centro
+        # Looking radius around the center
         search_radius = max(rows, cols) // 4
 
         for dr in range(-search_radius, search_radius + 1):
@@ -30,7 +30,7 @@ class GameLogic:
                     y = offset_y + r * tile_size + tile_size / 2
                     return x, y
 
-        # Si no encuentra nada (raro), devuelve el centro por defecto
+        # If there is nothing extrange returns the center by default
         x = offset_x + center_c * tile_size + tile_size / 2
         y = offset_y + center_r * tile_size + tile_size / 2
         return x, y
@@ -78,27 +78,27 @@ class GameLogic:
             scene.coin_timer = 6000
 
     def check_player_collisions(self, scene):
-        """Verifica si algún jugador colisionó con otro (con margen)."""
-        COLLISION_MARGIN = 2  # margen en píxeles
+        """Check if any player collide with other (with some margin)."""
+        COLLISION_MARGIN = 2  # margin in pixels
 
         for i, p1 in enumerate(scene.players):
             for j, p2 in enumerate(scene.players):
                 if i >= j:
-                    continue  # evita comparar el mismo par dos veces
+                    continue  # vaoid compare the same pair two times
 
-                # --- Cálculo de distancia ---
+                # --- Distance calculus ---
                 dx = p1.x - p2.x
                 dy = p1.y - p2.y
                 distance = (dx ** 2 + dy ** 2) ** 0.5
 
-                # --- Radio efectivo de colisión ---
+                # --- Effective collision radius ---
                 collision_radius = p1.radius + p2.radius - COLLISION_MARGIN
 
                 if distance <= collision_radius:
                     self.on_player_collision(scene, p1, p2)
 
     def on_player_collision(self, scene, player1, player2):
-        """Acción al detectar una colisión entre jugadores."""
+        """Action when a collision between players was detected."""
 
         if player1.is_evil and not player2.is_evil:
             self.defeat_player_and_transmit(player2, scene)

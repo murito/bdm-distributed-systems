@@ -32,23 +32,23 @@ class StylizedGhostButton:
         x, y = self.position
         w, h = self.size
 
-        # Sombra
+        # Shadow
         shadow_offset = 4
         shadow_rect = pygame.Rect(x + shadow_offset, y + shadow_offset, w, h)
         pygame.draw.ellipse(surface, (30, 30, 30), shadow_rect)
 
-        # Cuerpo del fantasma
+        # Ghost body
         pygame.draw.ellipse(surface, self.ghost_color, (x, y, w, h // 1.5))
         pygame.draw.rect(surface, self.ghost_color, (x, y + h // 3, w, h // 2))
 
-        # Ondas inferiores
+        # Bottom waves
         foot_radius = w // 6
         for i in range(3):
             cx = x + foot_radius + i * foot_radius * 2
             cy = y + h
             pygame.draw.circle(surface, self.ghost_color, (cx, cy), foot_radius)
 
-        # Ojos grandes
+        # Big eyes
         eye_radius = 12
         eye_y = y + h // 4
         eye_x1 = x + w // 3 - 10
@@ -56,11 +56,11 @@ class StylizedGhostButton:
         pygame.draw.circle(surface, self.eye_color, (eye_x1, eye_y), eye_radius)
         pygame.draw.circle(surface, self.eye_color, (eye_x2, eye_y), eye_radius)
 
-        # Pupilas
+        # Pupils
         pygame.draw.circle(surface, self.pupil_color, (eye_x1 + 4, eye_y + 2), 5)
         pygame.draw.circle(surface, self.pupil_color, (eye_x2 + 4, eye_y + 2), 5)
 
-        # Texto
+        # Text
         text_surface = self.font.render(self.text, True, self.text_color)
         text_rect = text_surface.get_rect(center=(x + w // 2, y + h // 2 + 10))
         surface.blit(text_surface, text_rect)

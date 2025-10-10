@@ -11,7 +11,7 @@ class TextInputWithLabel:
         self.active = False
         self.text = ""
 
-        # Fuente estilo arcade
+        # Font arcade style
         if font_path:
             self.font = pygame.font.Font(font_path, font_size)
         else:
@@ -37,10 +37,10 @@ class TextInputWithLabel:
                     self.text += event.unicode
 
     def draw(self, surface):
-        # Dibuja el label
+        # Draw the label
         surface.blit(self.label_surface, self.label_rect)
 
-        # Dibuja el campo de texto
+        # Draw the text field
         pygame.draw.rect(surface, self.bg_color, self.input_rect)
         pygame.draw.rect(surface, self.text_color, self.input_rect, 2)
 

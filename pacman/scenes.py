@@ -1,5 +1,3 @@
-import json
-import random
 import pygame
 
 from settings import *
@@ -9,7 +7,6 @@ from input_text import TextInputWithLabel
 from ghost_button import StylizedGhostButton
 from loading import PacmanLoadingAnimation
 from p2p_node import *
-from p2p_helpers import get_json_by_field
 from pacman import Pacman
 from coin import Coin
 from game_logic import GameLogic
@@ -37,7 +34,6 @@ class MainScene(Scene):
         self.title_label = Label("PACMAN", position=(210, 80), font_size=30, font_path="pac-font.ttf")
         self.btn_server = PacmanButton("START A SERVER", position=(200, 200))
         self.btn_connect = PacmanButton("CONNECT", position=(200, 270))
-        self.btn_test = PacmanButton("TEST", position=(200, 340))
 
     def events(self, events):
         for event in events:
@@ -47,9 +43,6 @@ class MainScene(Scene):
             if self.btn_connect.handle_event(event):
                 self.game.change_scene(ConnectToServerScene(self.game))
 
-            if self.btn_test.handle_event(event):
-                self.game.change_scene(GameScene(self.game))
-
     def update(self, dt):
         pass
 
@@ -57,7 +50,6 @@ class MainScene(Scene):
         self.title_label.draw(display)
         self.btn_server.draw(display)
         self.btn_connect.draw(display)
-        self.btn_test.draw(display)
 
 # Start a server
 class StartServerScene(Scene):

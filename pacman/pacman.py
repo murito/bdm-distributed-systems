@@ -23,7 +23,7 @@ class Pacman:
         self.pacman = pacman
         self.defeated = False  # 🧩 ahora se usa de verdad
 
-        # --- NUEVOS ATRIBUTOS ---
+        # --- NEW ATTRIBUTES ---
         self.is_evil = False
         self.evil_timer = 0
         self.evil_color = (255, 50, 50)
@@ -39,12 +39,12 @@ class Pacman:
 
     def update(self, keys, board):
         if self.defeated:
-            return  # 💀 No se mueve ni actualiza nada
+            return  # 💀 Dont move nor update anything, because your are death
 
         rows = len(board)
         cols = len(board[0])
 
-        # --- Actualizar modo malvado ---
+        # --- Turn evil mode ---
         if self.is_evil:
             self.evil_timer -= self.pacman.clock.get_time()
             if self.evil_timer < 2000:
@@ -56,7 +56,7 @@ class Pacman:
                 self.speed -= 0.5
 
         if self.controlled_locally:
-            # Leer dirección deseada
+            # Read the desired direction
             if keys[pygame.K_LEFT]: self.next_direction = "LEFT"
             elif keys[pygame.K_RIGHT]: self.next_direction = "RIGHT"
             elif keys[pygame.K_UP]: self.next_direction = "UP"
@@ -68,7 +68,7 @@ class Pacman:
             center_y = BOARD_OFFSET_Y + row * self.tile_size + self.tile_size / 2
             aligned = abs(self.x - center_x) < 1 and abs(self.y - center_y) < 1
 
-            # Cambiar dirección si está alineado
+            # change the direction if it is aligned
             if aligned and self.next_direction:
                 dcol, drow = 0, 0
                 if self.next_direction == "LEFT": dcol = -1
@@ -83,7 +83,7 @@ class Pacman:
                     self.x = center_x
                     self.y = center_y
 
-            # --- Movimiento normal o teletransporte ---
+            # --- Normal or tele-transport movement ---
             dcol, drow = 0, 0
             if self.direction == "LEFT": dcol = -1
             if self.direction == "RIGHT": dcol = 1
@@ -120,7 +120,7 @@ class Pacman:
                 else:
                     self.x, self.y = center_x, center_y
 
-            # --- Transmitir posición por red ---
+            # --- Send position by the network ---
             if self.prevx != self.x or self.prevy != self.y:
                 self.prevx, self.prevy = self.x, self.y
                 cx, cy = self.pacman.coin_initial_position
@@ -138,7 +138,7 @@ class Pacman:
                 update_object_by_id(peer_players, self.id, msg)
                 broadcast_message(packet_data(msg))
 
-        # --- Animación de la boca ---
+        # --- Mouth animation ---
         delta_angle = 8 if self.is_evil else 5
         if self.mouth_opening:
             self.mouth_angle += delta_angle
@@ -160,13 +160,13 @@ class Pacman:
                 self.color = self.evil_color if is_evil else self.base_color
 
     def draw(self, surface):
-        # --- Cuerpo ---
+        # --- Body ---
         if self.defeated:
             body_color = (150, 150, 150)  # gris
         else:
             body_color = self.base_color
 
-        # Rotación de boca
+        # Mouth rotation
         if self.direction == "RIGHT": rotation = 0
         elif self.direction == "LEFT": rotation = math.pi
         elif self.direction == "UP": rotation = math.pi / 2
@@ -180,14 +180,14 @@ class Pacman:
             points.append((rx, ry))
         pygame.draw.polygon(surface, body_color, points)
 
-        # --- OJOS ---
+        # --- EYES ---
         eye_offset_x = self.radius * 0.4
         eye_offset_y = -self.radius * 0.5
         eye1_pos = (self.x - eye_offset_x, self.y + eye_offset_y)
         eye2_pos = (self.x + eye_offset_x, self.y + eye_offset_y)
 
         if self.defeated:
-            # 💀 ojos de muerto “X”
+            # 💀 Death eyes “X”
             self._draw_dead_eye(surface, eye1_pos)
             self._draw_dead_eye(surface, eye2_pos)
             return
@@ -221,7 +221,7 @@ class Pacman:
             pygame.draw.circle(surface, (0, 0, 0), eye2_pos, 3)
 
     def _draw_dead_eye(self, surface, pos):
-        """Dibuja una X como ojo de muerto"""
+        """Draw a X like a death eye"""
         x, y = pos
         size = 4
         pygame.draw.line(surface, (0, 0, 0), (x - size, y - size), (x + size, y + size), 2)

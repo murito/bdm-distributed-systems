@@ -30,7 +30,7 @@ def place_random(board):
         if cell == '0'
     ]
     if not empty_cells:
-        print("⚠️ No hay celdas vacías para colocar la moneda.")
+        print("⚠️ There are non empty cells to put the coin.")
         return
 
     col, row = random.choice(empty_cells)
