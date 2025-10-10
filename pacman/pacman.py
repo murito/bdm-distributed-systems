@@ -4,7 +4,7 @@ from settings import *
 from p2p_node import peer_players, broadcast_message, packet_data, update_object_by_id
 
 class Pacman:
-    def __init__(self, identifier, pacman, x, y, color=(255,255,0), tile_size=24, speed=3, radius=10, controlled_locally=True):
+    def __init__(self, identifier, pacman, x, y, color=(255,255,0), tile_size=24, speed=3, radius=10, controlled_locally=True, defeated=False):
         self.id = identifier
         self.prevx = x
         self.prevy = y
@@ -21,7 +21,7 @@ class Pacman:
         self.mouth_opening = True
         self.controlled_locally = controlled_locally
         self.pacman = pacman
-        self.defeated = False  # 🧩 ahora se usa de verdad
+        self.defeated = defeated  # 🧩 ahora se usa de verdad
 
         # --- NEW ATTRIBUTES ---
         self.is_evil = False
@@ -133,7 +133,8 @@ class Pacman:
                     "direction": self.direction,
                     "outgoing_player": False,
                     "coin_initial_position": f"{cx},{cy}",
-                    "is_evil": self.is_evil
+                    "is_evil": self.is_evil,
+                    "defeated": self.defeated
                 }
                 update_object_by_id(peer_players, self.id, msg)
                 broadcast_message(packet_data(msg))

@@ -1,6 +1,6 @@
 import pygame
 from settings import *
-from p2p_helpers import json_packet, packet_data, get_json_by_id
+from p2p_helpers import json_packet, packet_data, get_json_by_id, update_object_by_id
 from p2p_node import broadcast_message, peer_players
 
 class GameLogic:
@@ -125,6 +125,11 @@ class GameLogic:
             coin_pos=scene.coin.position,
             outgoing_player=False,
             defeated=True
+        )
+        update_object_by_id(
+            data_list=peer_players,
+            target_id=player.id,
+            new_properties={"defeated": True}
         )
         pkt = packet_data(defeated_player)
         broadcast_message(pkt)

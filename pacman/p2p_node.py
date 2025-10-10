@@ -52,7 +52,7 @@ def handle_client(conn, addr, pacman):
         # inform the existence of others players to the new client
         for player in peer_players:
             if player['id'] != new_client['id']:
-                time.sleep(0.5)
+                time.sleep(0.8)
                 cx, cy = pacman.coin_initial_position
                 update_object_by_id(peer_players, player['id'], {
                     "players": pacman.players_joined,
@@ -77,13 +77,15 @@ def handle_client(conn, addr, pacman):
             # decode string
             json_data = unpack_data(msg_data)
 
+            # show network traffic
+            print(json_data)
+
             # It means you are the server, broadcast the message then
             if pacman.whoami == "server":
                 broadcast_message(packet_data(json_data))
 
             # Messages send by server
             if json_data['from'] == "server":
-                print(json_data)
                 if json_data.get('coin_position') is not None:
                     position = json_data.get('coin_position').split(",")
                     pacman.coin_initial_position = (int(position[0]), int(position[1]))
@@ -109,7 +111,7 @@ def handle_client(conn, addr, pacman):
                 # Remote controls are caught here
                 update_object_by_id(peer_players, json_data['id'], json_data)
             elif not bool(json_data['outgoing_player']):
-                print("Incoming player")
+                print(f"Incoming player: {json_data} ")
                 pacman.players_joined = json_data['players']
                 peer_players.append(json_data)
 

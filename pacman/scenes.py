@@ -225,8 +225,9 @@ class GameScene(Scene):
                     peer_players[player]['y'] = start_y
 
                 r, g, b = peer_players[player]['color'].split(',')
-                p = Pacman(peer_players[player]['id'], self.game, start_x, start_y, color=(int(r), int(g), int(b)),
-                           speed=2, controlled_locally=(peer_players[player]['id'] == self.game.whoami))
+                p = Pacman(peer_players[player]['id'], self.game, peer_players[player]['x'] , peer_players[player]['y'] , color=(int(r), int(g), int(b)),
+                           speed=2, controlled_locally=(peer_players[player]['id'] == self.game.whoami), defeated=peer_players[player]['defeated'])
+
                 self.players.append(p)
                 self.players_rendered.append(peer_players[player]['id'])
 
