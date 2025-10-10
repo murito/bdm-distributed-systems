@@ -2,7 +2,7 @@ CAPTION = "Pacman P2P - Game"
 WIDTH, HEIGHT = 600, 600
 FPS = 60
 
-MIN_PLAYERS = 2
+MIN_PLAYERS = 4
 
 pacman_colors = [
     (255, 0, 0),  # Red

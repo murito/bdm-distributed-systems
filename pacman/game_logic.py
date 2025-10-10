@@ -1,5 +1,7 @@
 import pygame
 from settings import *
+from p2p_helpers import json_packet, packet_data, get_json_by_id
+from p2p_node import broadcast_message, peer_players
 
 class GameLogic:
     def __init__(self, game):
@@ -76,18 +78,53 @@ class GameLogic:
             scene.coin_timer = 6000
 
     def check_player_collisions(self, scene):
-        """Verifica si algún jugador colisionó con otro."""
+        """Verifica si algún jugador colisionó con otro (con margen)."""
+        COLLISION_MARGIN = 2  # margen en píxeles
+
         for i, p1 in enumerate(scene.players):
             for j, p2 in enumerate(scene.players):
                 if i >= j:
                     continue  # evita comparar el mismo par dos veces
-                if p1.x == p2.x and p1.y == p2.y:
-                    self.on_player_collision(p1, p2)
 
-    def on_player_collision(self, player1, player2):
+                # --- Cálculo de distancia ---
+                dx = p1.x - p2.x
+                dy = p1.y - p2.y
+                distance = (dx ** 2 + dy ** 2) ** 0.5
+
+                # --- Radio efectivo de colisión ---
+                collision_radius = p1.radius + p2.radius - COLLISION_MARGIN
+
+                if distance <= collision_radius:
+                    self.on_player_collision(scene, p1, p2)
+
+    def on_player_collision(self, scene, player1, player2):
         """Acción al detectar una colisión entre jugadores."""
 
         if player1.is_evil and not player2.is_evil:
-            print(f"{player2.id} fue atrapado por {player1.id}!")
+            self.defeat_player_and_transmit(player2, scene)
         elif player2.is_evil and not player1.is_evil:
-            print(f"{player1.id} fue atrapado por {player2.id}!")
+            self.defeat_player_and_transmit(player1, scene)
+
+    def defeat_player_and_transmit(self, player, scene):
+        player.defeated = True
+        scene.check_for_the_winner = True
+
+        player_json = get_json_by_id(peer_players, player.id)
+
+        # Send defeated user to the others
+        defeated_player = json_packet(
+            identifier=player.id,
+            sender=scene.game.whoami,
+            players=scene.game.players_joined,
+            color=player_json[0]['color'],
+            x=player_json[0]['x'],
+            y=player_json[0]['y'],
+            direction=player_json[0]['direction'],
+            ip=player_json[0]['ip'],
+            port=player_json[0]['port'],
+            coin_pos=scene.coin.position,
+            outgoing_player=False,
+            defeated=True
+        )
+        pkt = packet_data(defeated_player)
+        broadcast_message(pkt)

@@ -32,13 +32,16 @@ def handle_client(conn, addr, pacman):
         random_uuid = uuid.uuid4()
         r, g, b = pacman_colors[pacman.players_joined - 2]
         new_client = json_packet(
-            str(random_uuid),
-            'server',
-            pacman.players_joined,
-            f"{r},{g},{b}", 0, 0, "LEFT",
-            ip,
-            port,
-            pacman.coin_initial_position
+            identifier=str(random_uuid),
+            sender='server',
+            players=pacman.players_joined,
+            color=f"{r},{g},{b}", x=0, y=0,
+            direction="LEFT",
+            ip=ip,
+            port=port,
+            coin_pos=pacman.coin_initial_position,
+            outgoing_player=False,
+            defeated=False
         )
         peer_players.append(new_client)
 
@@ -87,6 +90,7 @@ def handle_client(conn, addr, pacman):
 
                 # Filter the guy that left the game
                 if bool(json_data['outgoing_player']):
+                    pacman.players_joined -= 1
                     new_data = [item for item in peer_players if item.get("id") != json_data['id']]
                     peer_players[:] = new_data
 
@@ -106,6 +110,7 @@ def handle_client(conn, addr, pacman):
                 update_object_by_id(peer_players, json_data['id'], json_data)
             elif not bool(json_data['outgoing_player']):
                 print("Incoming player")
+                pacman.players_joined = json_data['players']
                 peer_players.append(json_data)
 
         except Exception as e:

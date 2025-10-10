@@ -9,6 +9,7 @@ from input_text import TextInputWithLabel
 from ghost_button import StylizedGhostButton
 from loading import PacmanLoadingAnimation
 from p2p_node import *
+from p2p_helpers import get_json_by_field
 from pacman import Pacman
 from coin import Coin
 from game_logic import GameLogic
@@ -173,8 +174,13 @@ class GameScene(Scene):
         # General logic for this scene
         self.game_logic = GameLogic(game)
 
+        self.check_for_the_winner = False
+
         # Title
         self.title_label = Label("PACMAN", position=(210, 25), font_size=30, font_path="pac-font.ttf")
+        self.defeated_label = Label("DERROTADO!", position=(160, 280), font_size=30, font_path="pac-font.ttf", is_visible=False)
+        self.winner_label = Label("GANASTE!", position=(190, 280), font_size=30, font_path="pac-font.ttf",
+                                    is_visible=False)
 
         # get x and y to position  players
         start_x, start_y = self.game_logic.find_spawn(board, BOARD_OFFSET_X, BOARD_OFFSET_Y, TILE_SIZE)
@@ -234,6 +240,9 @@ class GameScene(Scene):
 
         # loop over players
         for player in self.players:
+            if player.defeated and self.game.whoami == player.id:
+                self.defeated_label.set_visible(True)
+
             # Local player coin collision
             if player.controlled_locally:
                 self.game_logic.player_coin_collision(self, player, player.x, player.y)
@@ -246,6 +255,7 @@ class GameScene(Scene):
                 # remote player coin collision
                 self.game_logic.player_coin_collision(self, player, int(remote_data[0]['x']), int(remote_data[0]['y']))
 
+        # detect players collisions
         self.game_logic.check_player_collisions(self)
 
         # new place for coin
@@ -255,6 +265,12 @@ class GameScene(Scene):
                 if self.coin_timer <= 0:
                     self.coin_timer = None
                     self.coin.place_random(board)
+
+        # Check for the winner
+        if self.check_for_the_winner:
+            in_the_game = [obj for obj in peer_players if obj.get('defeated') is False]
+            if len(in_the_game) == 1 and in_the_game[0]['id'] == self.game.whoami:
+                self.winner_label.set_visible(True)
 
     def draw(self, display):
         display.fill((0, 0, 0))
@@ -274,5 +290,8 @@ class GameScene(Scene):
         # Add coin
         self.coin.update()
         self.coin.draw(display)
+
+        self.defeated_label.draw(display)
+        self.winner_label.draw(display)
 
         pygame.display.flip()

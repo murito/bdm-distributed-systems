@@ -3,7 +3,7 @@ import json
 import random
 from settings import BOARD_OFFSET_X, BOARD_OFFSET_Y, TILE_SIZE
 
-def json_packet(identifier, sender, players, color, x, y, direction, ip, port, coin_pos = (0,0), outgoing_player = False):
+def json_packet(identifier, sender, players, color, x, y, direction, ip, port, coin_pos = (0,0), outgoing_player = False, defeated=False):
     cx,cy = coin_pos
     return {
         "players": players,
@@ -17,7 +17,8 @@ def json_packet(identifier, sender, players, color, x, y, direction, ip, port, c
         "port": port,
         "is_evil": False,
         "outgoing_player": outgoing_player,
-        "coin_initial_position": f"{cx},{cy}"
+        "coin_initial_position": f"{cx},{cy}",
+        "defeated": defeated
     }
 
 
