@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 17.0.2, 2025-10-11T17:39:50. -->
+<!-- Written by QtCreator 17.0.2, 2025-10-12T12:06:15. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -154,7 +154,7 @@
      <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">app.py</value>
      <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration.</value>
      <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/Users/murito/Documents/UAG/Maestria/SegundoCuatrimestre/SistemasDistribuidos/Desarrollo/bdm-distributed-systems/security-and-encryption/app.py</value>
-     <value type="bool" key="ProjectExplorer.RunConfiguration.Customized">false</value>
+     <value type="bool" key="ProjectExplorer.RunConfiguration.Customized">true</value>
      <value type="QString" key="PythonEditor.RunConfiguation.Script">/Users/murito/Documents/UAG/Maestria/SegundoCuatrimestre/SistemasDistribuidos/Desarrollo/bdm-distributed-systems/security-and-encryption/app.py</value>
      <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
      <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
@@ -173,7 +173,7 @@
      <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">p2p_node.py</value>
      <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration.</value>
      <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/Users/murito/Documents/UAG/Maestria/SegundoCuatrimestre/SistemasDistribuidos/Desarrollo/bdm-distributed-systems/security-and-encryption/p2p_node.py</value>
-     <value type="bool" key="ProjectExplorer.RunConfiguration.Customized">false</value>
+     <value type="bool" key="ProjectExplorer.RunConfiguration.Customized">true</value>
      <value type="QString" key="PythonEditor.RunConfiguation.Script">/Users/murito/Documents/UAG/Maestria/SegundoCuatrimestre/SistemasDistribuidos/Desarrollo/bdm-distributed-systems/security-and-encryption/p2p_node.py</value>
      <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
      <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
@@ -210,7 +210,7 @@
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">app.py</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration.</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/Users/murito/Documents/UAG/Maestria/SegundoCuatrimestre/SistemasDistribuidos/Desarrollo/bdm-distributed-systems/security-and-encryption/app.py</value>
-    <value type="bool" key="ProjectExplorer.RunConfiguration.Customized">false</value>
+    <value type="bool" key="ProjectExplorer.RunConfiguration.Customized">true</value>
     <value type="QString" key="PythonEditor.RunConfiguation.Script">/Users/murito/Documents/UAG/Maestria/SegundoCuatrimestre/SistemasDistribuidos/Desarrollo/bdm-distributed-systems/security-and-encryption/app.py</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
@@ -229,7 +229,7 @@
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">p2p_node.py</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration.</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/Users/murito/Documents/UAG/Maestria/SegundoCuatrimestre/SistemasDistribuidos/Desarrollo/bdm-distributed-systems/security-and-encryption/p2p_node.py</value>
-    <value type="bool" key="ProjectExplorer.RunConfiguration.Customized">false</value>
+    <value type="bool" key="ProjectExplorer.RunConfiguration.Customized">true</value>
     <value type="QString" key="PythonEditor.RunConfiguation.Script">/Users/murito/Documents/UAG/Maestria/SegundoCuatrimestre/SistemasDistribuidos/Desarrollo/bdm-distributed-systems/security-and-encryption/p2p_node.py</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>

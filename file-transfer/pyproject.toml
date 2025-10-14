@@ -1,0 +1,5 @@
+[project]
+name = "File Transfer"
+
+[tool.pyside6-project]
+files = ["filetransfer.py", "form.ui", "p2p_node.py"]
