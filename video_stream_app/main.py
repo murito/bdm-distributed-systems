@@ -11,12 +11,22 @@ from PySide6.QtCore import Qt
 from PySide6.QtGui import QImage, QPixmap
 from ui_form import Ui_MainWindow  # generado a partir de form.ui
 
+import os
+import subprocess
 
 class VideoStreamApp(QMainWindow):
     def __init__(self):
         super().__init__()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
+
+        # Auto-generate certificate if not found
+        if not os.path.exists("cert.pem") or not os.path.exists("key.pem"):
+            subprocess.run([
+                "openssl", "req", "-x509", "-newkey", "rsa:2048",
+                "-keyout", "key.pem", "-out", "cert.pem",
+                "-days", "365", "-nodes", "-subj", "/CN=localhost"
+            ])
 
         self.server_socket = None
         self.client_socket = None
@@ -55,6 +65,9 @@ class VideoStreamApp(QMainWindow):
         self.ui.inputClientIP.setEnabled(False)
         self.ui.inputClientPort.setEnabled(False)
         self.ui.btnStartClient.setEnabled(False)
+        self.ui.btnBackward.setEnabled(False)
+        self.ui.btnForward.setEnabled(False)
+        self.ui.btnPlayPause.setEnabled(False)
 
     # ================== SERVER ==================
     def start_server(self):
@@ -64,7 +77,10 @@ class VideoStreamApp(QMainWindow):
             return
         port = int(port_text)
         self.ui.videoLabel.setStyleSheet("border: 2px solid #00ff00; background-color: #202020;")
+
+        # Aqui el thread del servidor
         threading.Thread(target=self.server_thread, args=(port,), daemon=True).start()
+
         self.ui.statusLabel.setText(f"Servidor escuchando en puerto {port}")
         self.disabledControls()
 
@@ -90,7 +106,10 @@ class VideoStreamApp(QMainWindow):
                 ret, frame = self.capture.read()
                 if not ret:
                     continue
+
+                # Local preview
                 self.display_frame(frame)
+
                 _, buffer = cv2.imencode(".jpg", frame, [cv2.IMWRITE_JPEG_QUALITY, 50])
                 data = buffer.tobytes()
                 size = len(data)
@@ -108,13 +127,17 @@ class VideoStreamApp(QMainWindow):
     def start_client(self):
         host = self.ui.inputClientIP.text().strip()
         port_text = self.ui.inputClientPort.text().strip()
+
         if not host or not port_text.isdigit():
             QMessageBox.warning(self, "Error", "IP o puerto inválido.")
             return
+
         port = int(port_text)
         self.ui.videoLabel.setStyleSheet("border: 2px solid #0099ff; background-color: #202020;")
 
+        # Aqui el thread del cliente
         threading.Thread(target=self.client_thread, args=(host, port), daemon=True).start()
+
         self.ui.statusLabel.setText(f"Conectando a {host}:{port}...")
         self.disabledControls()
         self.ui.stop_play.setEnabled(False)
@@ -140,15 +163,24 @@ class VideoStreamApp(QMainWindow):
         self.running = True
 
         while self.running:
+            # get the header first
             header = self.recvall(conn, 4)
             if not header:
                 break
             size = int.from_bytes(header, "big")
+
+            # then get the data
             data = self.recvall(conn, size)
             if not data:
                 break
+
+            # decode the data and get the frame
             frame = cv2.imdecode(np.frombuffer(data, np.uint8), cv2.IMREAD_COLOR)
+
+            # Add t othe screen label (Simulated video screen)
             self.display_frame(frame)
+
+            # Store for future playing
             self.frames_buffer.append(frame.copy())
 
         conn.close()
@@ -157,6 +189,10 @@ class VideoStreamApp(QMainWindow):
         self.play_recorded_video()
 
     def play_recorded_video(self):
+        self.ui.btnBackward.setEnabled(True)
+        self.ui.btnForward.setEnabled(True)
+        self.ui.btnPlayPause.setEnabled(True)
+
         self.ui.btnPlayPause.setText("Pause")
         threading.Thread(target=self.replay_buffer, daemon=True).start()
 
@@ -204,7 +240,7 @@ class VideoStreamApp(QMainWindow):
                 self.play_index += 1
                 self.ui.sliderProgress.setMaximum(len(self.frames_buffer)-1)
                 self.ui.sliderProgress.setValue(self.play_index)
-            time.sleep(1/24)
+            time.sleep(1/24) # 24 fps
 
         self.playing_recorded_video = False
         self.ui.btnPlayPause.setText("Play")
@@ -217,6 +253,15 @@ class VideoStreamApp(QMainWindow):
             self.display_frame(self.frames_buffer[self.play_index])
         self.slider_dragging = False
 
+    def closeEvent(self, event):
+            self.running = False
+            if self.capture:
+                self.capture.release()
+            if self.server_socket:
+                self.server_socket.close()
+            if self.client_socket:
+                self.client_socket.close()
+            event.accept()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
