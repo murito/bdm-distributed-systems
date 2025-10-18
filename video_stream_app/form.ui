@@ -1,135 +1,173 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>MainWindow</class>
- <widget class="QMainWindow" name="MainWindow">
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>640</width>
-    <height>505</height>
-   </rect>
-  </property>
-  <property name="windowTitle">
-   <string>Video Streaming TCP  - SSL</string>
-  </property>
-  <widget class="QWidget" name="centralwidget">
-   <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,1,0,0">
-    <item>
-     <widget class="QLabel" name="videoLabel">
-      <property name="minimumSize">
-       <size>
-        <width>320</width>
-        <height>240</height>
-       </size>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">background-color: #202020; color: #aaaaaa; border: 1px solid #555;</string>
-      </property>
-      <property name="text">
-       <string>Vista de video</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignmentFlag::AlignCenter</set>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QFrame" name="frameServer">
-      <property name="frameShape">
-       <enum>QFrame::Shape::StyledPanel</enum>
-      </property>
-      <layout class="QHBoxLayout" name="horizontalLayoutServer">
-       <item>
-        <widget class="QLineEdit" name="inputServerPort">
-         <property name="text">
-          <string>8080</string>
-         </property>
-         <property name="placeholderText">
-          <string>Puerto servidor</string>
-         </property>
+    <class>MainWindow</class>
+    <widget class="QMainWindow" name="MainWindow">
+        <property name="geometry">
+            <rect>
+                <x>0</x>
+                <y>0</y>
+                <width>640</width>
+                <height>567</height>
+            </rect>
+        </property>
+        <property name="windowTitle">
+            <string>Video Streaming TCP - SSL</string>
+        </property>
+        <widget class="QWidget" name="centralwidget">
+            <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,1,0,0,0">
+                <item>
+                    <widget class="QLabel" name="videoLabel">
+                        <property name="minimumSize">
+                            <size>
+                                <width>320</width>
+                                <height>240</height>
+                            </size>
+                        </property>
+                        <property name="styleSheet">
+                            <string notr="true">background-color: #202020; color: #aaaaaa; border:
+                                1px solid #555;</string>
+                        </property>
+                        <property name="text">
+                            <string>Vista de video</string>
+                        </property>
+                        <property name="alignment">
+                            <set>Qt::AlignmentFlag::AlignCenter</set>
+                        </property>
+                    </widget>
+                </item>
+                <item>
+                    <widget class="QFrame" name="frameServer">
+                        <property name="frameShape">
+                            <enum>QFrame::Shape::StyledPanel</enum>
+                        </property>
+                        <layout class="QHBoxLayout" name="horizontalLayoutServer">
+                            <item>
+                                <widget class="QSlider" name="sliderProgress">
+                                    <property name="orientation">
+                                        <enum>Qt::Horizontal</enum>
+                                    </property>
+                                </widget>
+                            </item>
+                            <item>
+                                <widget class="QPushButton" name="btnBackward">
+                                    <property name="text">
+                                        <string>&lt;&lt;</string>
+                                    </property>
+                                </widget>
+                            </item>
+                            <item>
+                                <widget class="QPushButton" name="btnPlayPause">
+                                    <property name="text">
+                                        <string>Play</string>
+                                    </property>
+                                </widget>
+                            </item>
+                            <item>
+                                <widget class="QPushButton" name="btnForward">
+                                    <property name="text">
+                                        <string>&gt;&gt;</string>
+                                    </property>
+                                </widget>
+                            </item>
+                        </layout>
+                    </widget>
+                </item>
+                <item>
+                    <widget class="QFrame" name="frameServer">
+                        <property name="frameShape">
+                            <enum>QFrame::Shape::StyledPanel</enum>
+                        </property>
+                        <layout class="QHBoxLayout" name="horizontalLayoutServer">
+                            <item>
+                                <widget class="QLineEdit" name="inputServerPort">
+                                    <property name="text">
+                                        <string>8080</string>
+                                    </property>
+                                    <property name="placeholderText">
+                                        <string>Puerto servidor</string>
+                                    </property>
+                                </widget>
+                            </item>
+                            <item>
+                                <widget class="QPushButton" name="btnStartServer">
+                                    <property name="text">
+                                        <string>Iniciar Servidor</string>
+                                    </property>
+                                </widget>
+                            </item>
+                        </layout>
+                    </widget>
+                </item>
+                <item>
+                    <widget class="QFrame" name="frameClient">
+                        <property name="frameShape">
+                            <enum>QFrame::Shape::StyledPanel</enum>
+                        </property>
+                        <layout class="QHBoxLayout" name="horizontalLayoutClient">
+                            <item>
+                                <widget class="QLineEdit" name="inputClientIP">
+                                    <property name="text">
+                                        <string>127.0.0.1</string>
+                                    </property>
+                                    <property name="placeholderText">
+                                        <string>IP del servidor</string>
+                                    </property>
+                                </widget>
+                            </item>
+                            <item>
+                                <widget class="QLineEdit" name="inputClientPort">
+                                    <property name="text">
+                                        <string>8080</string>
+                                    </property>
+                                    <property name="placeholderText">
+                                        <string>Puerto del servidor</string>
+                                    </property>
+                                </widget>
+                            </item>
+                            <item>
+                                <widget class="QPushButton" name="btnStartClient">
+                                    <property name="text">
+                                        <string>Iniciar Cliente</string>
+                                    </property>
+                                </widget>
+                            </item>
+                        </layout>
+                    </widget>
+                </item>
+                <item>
+                    <widget class="QPushButton" name="stop_play">
+                        <property name="text">
+                            <string>Detener streamming</string>
+                        </property>
+                    </widget>
+                </item>
+                <item>
+                    <widget class="QLabel" name="statusLabel">
+                        <property name="styleSheet">
+                            <string notr="true">color: #00ff99;</string>
+                        </property>
+                        <property name="text">
+                            <string>Listo.</string>
+                        </property>
+                        <property name="alignment">
+                            <set>Qt::AlignmentFlag::AlignCenter</set>
+                        </property>
+                    </widget>
+                </item>
+            </layout>
         </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="btnStartServer">
-         <property name="text">
-          <string>Iniciar Servidor</string>
-         </property>
+        <widget class="QMenuBar" name="menubar">
+            <property name="geometry">
+                <rect>
+                    <x>0</x>
+                    <y>0</y>
+                    <width>640</width>
+                    <height>24</height>
+                </rect>
+            </property>
         </widget>
-       </item>
-      </layout>
-     </widget>
-    </item>
-    <item>
-     <widget class="QFrame" name="frameClient">
-      <property name="frameShape">
-       <enum>QFrame::Shape::StyledPanel</enum>
-      </property>
-      <layout class="QHBoxLayout" name="horizontalLayoutClient">
-       <item>
-        <widget class="QLineEdit" name="inputClientIP">
-         <property name="text">
-          <string>127.0.0.1</string>
-         </property>
-         <property name="placeholderText">
-          <string>IP del servidor</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="inputClientPort">
-         <property name="text">
-          <string>8080</string>
-         </property>
-         <property name="placeholderText">
-          <string>Puerto del servidor</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="btnStartClient">
-         <property name="text">
-          <string>Iniciar Cliente</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-    </item>
-    <item>
-     <widget class="QPushButton" name="stop_play">
-      <property name="text">
-       <string>Detener streamming</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QLabel" name="statusLabel">
-      <property name="styleSheet">
-       <string notr="true">color: #00ff99;</string>
-      </property>
-      <property name="text">
-       <string>Listo.</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignmentFlag::AlignCenter</set>
-      </property>
-     </widget>
-    </item>
-   </layout>
-  </widget>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>640</width>
-     <height>24</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QStatusBar" name="statusbar"/>
- </widget>
- <resources/>
- <connections/>
+        <widget class="QStatusBar" name="statusbar" />
+    </widget>
+    <resources />
+    <connections />
 </ui>

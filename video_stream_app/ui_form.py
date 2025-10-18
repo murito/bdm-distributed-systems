@@ -17,13 +17,14 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QFrame, QHBoxLayout, QLabel,
     QLineEdit, QMainWindow, QMenuBar, QPushButton,
-    QSizePolicy, QStatusBar, QVBoxLayout, QWidget)
+    QSizePolicy, QSlider, QStatusBar, QVBoxLayout,
+    QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(640, 505)
+        MainWindow.resize(640, 567)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.verticalLayout = QVBoxLayout(self.centralwidget)
@@ -31,7 +32,8 @@ class Ui_MainWindow(object):
         self.videoLabel = QLabel(self.centralwidget)
         self.videoLabel.setObjectName(u"videoLabel")
         self.videoLabel.setMinimumSize(QSize(320, 240))
-        self.videoLabel.setStyleSheet(u"background-color: #202020; color: #aaaaaa; border: 1px solid #555;")
+        self.videoLabel.setStyleSheet(u"background-color: #202020; color: #aaaaaa; border:\n"
+"                                1px solid #555;")
         self.videoLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.verticalLayout.addWidget(self.videoLabel)
@@ -41,18 +43,47 @@ class Ui_MainWindow(object):
         self.frameServer.setFrameShape(QFrame.Shape.StyledPanel)
         self.horizontalLayoutServer = QHBoxLayout(self.frameServer)
         self.horizontalLayoutServer.setObjectName(u"horizontalLayoutServer")
-        self.inputServerPort = QLineEdit(self.frameServer)
-        self.inputServerPort.setObjectName(u"inputServerPort")
+        self.sliderProgress = QSlider(self.frameServer)
+        self.sliderProgress.setObjectName(u"sliderProgress")
+        self.sliderProgress.setOrientation(Qt.Horizontal)
 
-        self.horizontalLayoutServer.addWidget(self.inputServerPort)
+        self.horizontalLayoutServer.addWidget(self.sliderProgress)
 
-        self.btnStartServer = QPushButton(self.frameServer)
-        self.btnStartServer.setObjectName(u"btnStartServer")
+        self.btnBackward = QPushButton(self.frameServer)
+        self.btnBackward.setObjectName(u"btnBackward")
 
-        self.horizontalLayoutServer.addWidget(self.btnStartServer)
+        self.horizontalLayoutServer.addWidget(self.btnBackward)
+
+        self.btnPlayPause = QPushButton(self.frameServer)
+        self.btnPlayPause.setObjectName(u"btnPlayPause")
+
+        self.horizontalLayoutServer.addWidget(self.btnPlayPause)
+
+        self.btnForward = QPushButton(self.frameServer)
+        self.btnForward.setObjectName(u"btnForward")
+
+        self.horizontalLayoutServer.addWidget(self.btnForward)
 
 
         self.verticalLayout.addWidget(self.frameServer)
+
+        self.frameServer1 = QFrame(self.centralwidget)
+        self.frameServer1.setObjectName(u"frameServer1")
+        self.frameServer1.setFrameShape(QFrame.Shape.StyledPanel)
+        self.horizontalLayoutServer1 = QHBoxLayout(self.frameServer1)
+        self.horizontalLayoutServer1.setObjectName(u"horizontalLayoutServer1")
+        self.inputServerPort = QLineEdit(self.frameServer1)
+        self.inputServerPort.setObjectName(u"inputServerPort")
+
+        self.horizontalLayoutServer1.addWidget(self.inputServerPort)
+
+        self.btnStartServer = QPushButton(self.frameServer1)
+        self.btnStartServer.setObjectName(u"btnStartServer")
+
+        self.horizontalLayoutServer1.addWidget(self.btnStartServer)
+
+
+        self.verticalLayout.addWidget(self.frameServer1)
 
         self.frameClient = QFrame(self.centralwidget)
         self.frameClient.setObjectName(u"frameClient")
@@ -105,8 +136,11 @@ class Ui_MainWindow(object):
     # setupUi
 
     def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"Video Streaming TCP  - SSL", None))
+        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"Video Streaming TCP - SSL", None))
         self.videoLabel.setText(QCoreApplication.translate("MainWindow", u"Vista de video", None))
+        self.btnBackward.setText(QCoreApplication.translate("MainWindow", u"<<", None))
+        self.btnPlayPause.setText(QCoreApplication.translate("MainWindow", u"Play", None))
+        self.btnForward.setText(QCoreApplication.translate("MainWindow", u">>", None))
         self.inputServerPort.setText(QCoreApplication.translate("MainWindow", u"8080", None))
         self.inputServerPort.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Puerto servidor", None))
         self.btnStartServer.setText(QCoreApplication.translate("MainWindow", u"Iniciar Servidor", None))
