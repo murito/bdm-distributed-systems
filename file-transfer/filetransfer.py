@@ -2,9 +2,11 @@ import sys
 import threading
 import base64
 import time
+import os
 
 from PySide6.QtWidgets import QApplication, QWidget, QFileDialog
-from PySide6.QtCore import Signal, QObject, QThread, Qt
+from PySide6.QtCore import Signal, QObject, QThread, Qt, QUrl
+from PySide6.QtGui import QDesktopServices, QIcon
 
 from p2p_node import peers, start_server, connect_to_peer, broadcast_message
 
@@ -107,16 +109,23 @@ class FileTransfer(QWidget):
         self.ui.listen_btn.clicked.connect(self.start_listening)
         self.ui.connect_btn.clicked.connect(self.connect_to_server)
         self.ui.send_file_btn.clicked.connect(self.send_file)
-        self.ui.stop_transfer_btn.clicked.connect(self.stop_transfer)  # 🆕 botón detener
+        self.ui.stop_transfer_btn.clicked.connect(self.stop_transfer)
+        self.ui.open_folder_btn.clicked.connect(self.open_downloads_folder)
 
         self.ui.progressBar.setValue(0)
         self.ui.progressBar.setMaximum(100)
 
         self.sender_thread = None
+        self.ui.stop_transfer_btn.setEnabled(False)
 
         # Make labels show all the content
         self.ui.receiving_label.setWordWrap(True)
         self.ui.receiving_label.setTextInteractionFlags(Qt.TextSelectableByMouse)
+
+    def open_downloads_folder(self):
+        path = self.ui.receptionfilespath.text()
+        folder_path = os.path.expanduser(OUTPUT_PATH if path == '' else path)
+        QDesktopServices.openUrl(QUrl.fromLocalFile(folder_path))
 
     def start_listening(self):
         port = int(self.ui.listen_port.text())
@@ -196,7 +205,9 @@ class FileTransfer(QWidget):
                 )
 
         elif msg == "FILE_END":
-            output_path = f"{OUTPUT_PATH}/{self.received_file_name or 'archivo_recibido.dat'}"
+            path = self.ui.receptionfilespath.text()
+            reception_path = OUTPUT_PATH if path == '' else path
+            output_path = f"{reception_path}/{self.received_file_name or 'archivo_recibido.dat'}"
             with open(output_path, "wb") as f:
                 for chunk in self.received_chunks:
                     f.write(chunk)
@@ -220,6 +231,7 @@ class FileTransfer(QWidget):
 # -------------------------------
 if __name__ == "__main__":
     app = QApplication(sys.argv)
+    app.setWindowIcon(QIcon("./icono.png"))
     app.aboutToQuit.connect(on_app_quit)
     widget = FileTransfer()
     widget.show()
