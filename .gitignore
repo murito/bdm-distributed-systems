@@ -5,3 +5,5 @@ file-transfer/.qtcreator/
 file-transfer/__pycache__/
 video_stream_app/.qtcreator/
 video_stream_app/__pycache__/
+chat/.qtcreator/
+chat/__pycache__/

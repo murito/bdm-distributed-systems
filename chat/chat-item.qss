@@ -1,0 +1,89 @@
+/* === Estilo del área con scroll === */
+QScrollArea {
+    border: 1px solid rgba(255, 255, 255, 30);
+    border-radius: 10px;
+    background-color: transparent;
+}
+
+#notificationsScroll{
+    border-radius: 0;
+}
+
+/* === Scrollbar vertical === */
+QScrollBar:vertical {
+    background: transparent;
+    width: 8px;
+    margin: 4px;
+}
+
+QScrollBar::handle:vertical {
+    background: rgba(255, 255, 255, 60);
+    border-radius: 4px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: rgba(255, 255, 255, 90);
+}
+
+
+#chat_text_box{
+    border-radius: 5px;
+    padding-left: 10px;
+}
+
+#newChatBtn{
+    border-radius: 0;
+}
+
+
+QPushButton {
+    background-color: #3a3a3a;
+    border: 1px solid #505050;
+    border-radius: 16px;
+    color: #d0d0d0;
+    font-size: 20px;
+    font-weight: bold;
+    padding: 0;
+}
+
+QPushButton:hover {
+    background-color: #4a4a4a;
+}
+
+QPushButton:pressed {
+    background-color: #2e2e2e;
+}
+
+QPushButton:focus {
+    outline: none;
+}
+
+#active_chat{
+    background: transparent;
+}
+
+
+#active_chat > QWidget {
+    background: transparent;
+}
+
+#active_chat > QWidget > QWidget {
+    background: transparent;
+}
+
+/* To prevent scrollbars from becoming transparent */
+#active_chat > QWidget > QScrollBar {
+    background: palette(base);
+}
+
+
+#chat_frame{
+    border-radius: 5px;
+    padding: 16px;
+    opacity: 0.3;
+    background-image: url('images/chat_bg.png') repeat;
+}
+
+#main_divisor{
+    color: rgb(0,0,0)
+}
