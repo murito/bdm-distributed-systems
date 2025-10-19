@@ -22,63 +22,76 @@ def circular_pixmap(pixmap, size):
     pixmap.setMask(mask.createMaskFromColor(Qt.transparent, Qt.MaskInColor))
     return pixmap
 
+
 # ---------------------------------------------------
 #  Contact item widgets
 # ---------------------------------------------------
 class ContactItemWidget(QWidget):
+    clicked = Signal()
+
     """Widget simple para la página 1 (solo nombre e imagen a la izquierda)."""
-    def __init__(self, name, image_path=None, parent=None):
+    def __init__(self, contact_id, name, image_path=None, parent=None):
         super().__init__(parent)
-        self.setStyleSheet("background: transparent;")  # fondo transparente
-        layout = QHBoxLayout(self)
-        layout.setContentsMargins(8, 4, 8, 4)  # separaciones internas
-        layout.setSpacing(10)
+        self.contact_id = contact_id
+        self.name = name
+        self.image_path = image_path or "images/user.png"
 
-        # Imagen a la izquierda
-        self.avatar = QLabel()
-        pix = QPixmap(image_path or "images/user.png").scaled(36, 36, Qt.KeepAspectRatio, Qt.SmoothTransformation)
-        self.avatar.setPixmap(circular_pixmap(pix, 36))
-        self.avatar.setFixedSize(36, 36)
-        self.avatar.setStyleSheet("border-radius: 18px;")
-        layout.addWidget(self.avatar)
-
-        # Nombre
-        self.name_label = QLabel(name)
-        self.name_label.setStyleSheet("border: none;color: white; font-size: 13px; background: transparent;")
-        layout.addWidget(self.name_label)
-
-        layout.addStretch()
-        self.setCursor(QCursor(Qt.PointingHandCursor))
-
-
-class SelectableContactItem(QWidget):
-    """Widget para la página 2 (imagen + nombre + checkbox)."""
-    def __init__(self, name, image_path=None, parent=None):
-        super().__init__(parent)
         self.setStyleSheet("background: transparent;")
         layout = QHBoxLayout(self)
         layout.setContentsMargins(8, 4, 8, 4)
         layout.setSpacing(10)
 
-        # Imagen a la izquierda
+        # Imagen
         self.avatar = QLabel()
-        pix = QPixmap(image_path or "images/user.png").scaled(36, 36, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+        pix = QPixmap(self.image_path).scaled(36, 36, Qt.KeepAspectRatio, Qt.SmoothTransformation)
         self.avatar.setPixmap(circular_pixmap(pix, 36))
         self.avatar.setFixedSize(36, 36)
-        self.avatar.setStyleSheet("border-radius: 18px;")
         layout.addWidget(self.avatar)
 
         # Nombre
-        self.name_label = QLabel(name)
-        self.name_label.setStyleSheet("border: none;color: white; font-size: 13px; background: transparent;")
+        self.name_label = QLabel(self.name)
+        self.name_label.setStyleSheet("border: none; color: white; font-size: 13px; background: transparent;")
+        layout.addWidget(self.name_label)
+
+        layout.addStretch()
+        self.setCursor(QCursor(Qt.PointingHandCursor))
+
+    def mousePressEvent(self, event):
+        if event.button() == Qt.LeftButton:
+            self.clicked.emit()
+        super().mousePressEvent(event)
+
+
+class SelectableContactItem(QWidget):
+    """Widget para la página 2 (imagen + nombre + checkbox)."""
+    def __init__(self, contact_id, name, image_path=None, parent=None):
+        super().__init__(parent)
+        self.contact_id = contact_id
+        self.name = name
+        self.image_path = image_path or "images/user.png"
+
+        self.setStyleSheet("background: transparent;")
+        layout = QHBoxLayout(self)
+        layout.setContentsMargins(8, 4, 8, 4)
+        layout.setSpacing(10)
+
+        # Imagen
+        self.avatar = QLabel()
+        pix = QPixmap(self.image_path).scaled(36, 36, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+        self.avatar.setPixmap(circular_pixmap(pix, 36))
+        self.avatar.setFixedSize(36, 36)
+        layout.addWidget(self.avatar)
+
+        # Nombre
+        self.name_label = QLabel(self.name)
+        self.name_label.setStyleSheet("border: none; color: white; font-size: 13px; background: transparent;")
         layout.addWidget(self.name_label)
 
         layout.addStretch()
 
-        # Checkbox a la derecha
+        # Checkbox
         self.checkbox = QCheckBox()
         layout.addWidget(self.checkbox)
-
         self.setCursor(QCursor(Qt.PointingHandCursor))
 
 
@@ -87,6 +100,7 @@ class SelectableContactItem(QWidget):
 # ---------------------------------------------------
 class ContactsPopover(QFrame):
     group_created = Signal(dict)
+    item_clicked = Signal(dict)
     contacts_changed = Signal(list)
 
     def __init__(self, parent=None):
@@ -121,7 +135,7 @@ class ContactsPopover(QFrame):
             QListWidget::item {
                 border: none;
                 background: transparent;
-                margin: 3px 0; /* separacion entre items */
+                margin: 3px 0;
                 padding: 0px;
             }
             QListWidget::item:hover {
@@ -133,24 +147,18 @@ class ContactsPopover(QFrame):
         layout.setContentsMargins(10, 10, 10, 10)
         layout.setSpacing(8)
 
-        # Stacked pages
+        # Páginas
         self.pages = QStackedWidget()
         layout.addWidget(self.pages)
-
-        # Páginas
         self.page_contacts = QWidget()
         self.page_new_group = QWidget()
-
         self.setup_contacts_page()
         self.setup_group_page()
-
         self.pages.addWidget(self.page_contacts)
         self.pages.addWidget(self.page_new_group)
 
         # Lista de contactos
         self.contacts = []
-
-        # Acciones
         self.create_btn.clicked.connect(self.on_create_group)
 
     # ---------------- CONTACTS PAGE ----------------
@@ -159,7 +167,6 @@ class ContactsPopover(QFrame):
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(8)
 
-        # Botón de "New group"
         new_group_btn = QPushButton("New group")
         new_group_btn.setStyleSheet("""
             QPushButton {
@@ -174,12 +181,10 @@ class ContactsPopover(QFrame):
         new_group_btn.clicked.connect(self.go_to_group_page)
         layout.addWidget(new_group_btn)
 
-        # Buscador
         self.search_box = QLineEdit()
         self.search_box.setPlaceholderText("Search name or number")
         layout.addWidget(self.search_box)
 
-        # Lista de contactos
         self.contacts_list = QListWidget()
         self.contacts_list.setFocusPolicy(Qt.NoFocus)
         self.contacts_list.setSelectionMode(QListWidget.NoSelection)
@@ -193,7 +198,6 @@ class ContactsPopover(QFrame):
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(8)
 
-        # Header con botones
         header_layout = QHBoxLayout()
         self.back_btn = QPushButton("← Back")
         self.back_btn.setStyleSheet("font-size: 11px; color: #bbb;")
@@ -212,17 +216,14 @@ class ContactsPopover(QFrame):
         header_layout.addWidget(self.create_btn)
         layout.addLayout(header_layout)
 
-        # Nombre del grupo
         self.group_name_box = QLineEdit()
         self.group_name_box.setPlaceholderText("Group name")
         layout.addWidget(self.group_name_box)
 
-        # Buscador de contactos
         self.group_search_box = QLineEdit()
         self.group_search_box.setPlaceholderText("Select contacts")
         layout.addWidget(self.group_search_box)
 
-        # Lista con checkbox
         self.group_contacts_list = QListWidget()
         self.group_contacts_list.setFocusPolicy(Qt.NoFocus)
         self.group_contacts_list.setSelectionMode(QListWidget.NoSelection)
@@ -240,8 +241,8 @@ class ContactsPopover(QFrame):
     def get_contacts(self):
         return self.contacts
 
-    def add_contact(self, name, image_path=None):
-        new_contact = {"name": name, "image": image_path or "images/user.png"}
+    def add_contact(self, contact_id, name, image_path=None):
+        new_contact = {"id": contact_id, "name": name, "image": image_path or "images/user.png"}
         self.contacts.append(new_contact)
         self.set_contacts(self.contacts)
 
@@ -252,6 +253,7 @@ class ContactsPopover(QFrame):
             widget = self.group_contacts_list.itemWidget(item)
             if widget.checkbox.isChecked():
                 members.append({
+                    "id": widget.contact_id,
                     "name": widget.name_label.text(),
                     "image": widget.avatar.pixmap()
                 })
@@ -263,15 +265,17 @@ class ContactsPopover(QFrame):
         group_name = self.group_name_box.text().strip()
         if not group_name or not members:
             return
-
         data = {"group_name": group_name, "members": members}
         self.group_created.emit(data)
-
         self.reset_group_page()
         self.go_to_contacts_page()
         self.close()
 
-    # ---------------- CLEANUP ----------------
+    def on_contact_clicked(self, contact):
+        self.item_clicked.emit(contact)
+        self.close()
+
+    # ---------------- HELPERS ----------------
     def reset_group_page(self):
         self.group_name_box.clear()
         self.group_search_box.clear()
@@ -280,20 +284,20 @@ class ContactsPopover(QFrame):
             widget = self.group_contacts_list.itemWidget(item)
             widget.checkbox.setChecked(False)
 
-    # ---------------- INTERNAL HELPERS ----------------
     def populate_contacts(self, list_widget, widget_class, filtered=None):
         list_widget.clear()
         data = filtered if filtered else self.contacts
         for c in data:
             item = QListWidgetItem()
-            item.setFlags(Qt.ItemIsEnabled)  # evita focus rectangle
-            widget = widget_class(c["name"], c.get("image"))
-            # agregamos separación vertical
+            item.setFlags(Qt.ItemIsEnabled)
+            widget = widget_class(c["id"], c["name"], c.get("image"))
             item.setSizeHint(widget.sizeHint() + QSize(0, 6))
             list_widget.addItem(item)
             list_widget.setItemWidget(item, widget)
 
-    # ---------------- FILTERS ----------------
+            if isinstance(widget, ContactItemWidget):
+                widget.clicked.connect(lambda contact=c: self.on_contact_clicked(contact))
+
     def filter_contacts(self, text):
         filtered = [c for c in self.contacts if text.lower() in c["name"].lower()]
         self.populate_contacts(self.contacts_list, ContactItemWidget, filtered)
@@ -302,14 +306,12 @@ class ContactsPopover(QFrame):
         filtered = [c for c in self.contacts if text.lower() in c["name"].lower()]
         self.populate_contacts(self.group_contacts_list, SelectableContactItem, filtered)
 
-    # ---------------- NAVIGATION ----------------
     def go_to_group_page(self):
         self.pages.setCurrentWidget(self.page_new_group)
 
     def go_to_contacts_page(self):
         self.pages.setCurrentWidget(self.page_contacts)
 
-    # ---------------- DISPLAY ----------------
     def show_above_button(self, button):
         global_pos = button.mapToGlobal(QPoint(0, button.height()))
         self.move(global_pos)

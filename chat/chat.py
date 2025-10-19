@@ -2,9 +2,10 @@
 import sys
 
 from PySide6.QtWidgets import QApplication, QWidget
-from PySide6.QtGui import QIcon
+from PySide6.QtGui import QIcon, QPixmap, Qt
 from PySide6.QtCore import QSize
 import os
+import random
 
 from datetime import date
 from notification_list_widget import NotificationListWidget
@@ -57,44 +58,60 @@ class Chat(QWidget):
         self.ui.emojiButton.clicked.connect(lambda: self.emoji_popover.show_above_button(self.ui.emojiButton))
 
         self.contacts_popover = ContactsPopover(self)
+        self.contacts_popover.item_clicked.connect(lambda data: self.contact_clicked(data))
         self.ui.newChatBtn.clicked.connect(lambda: self.contacts_popover.show_above_button(self.ui.newChatBtn))
 
         self.contacts_popover.contacts_changed.connect(lambda c: print("Contactos actualizados:", c))
         self.contacts_popover.group_created.connect(lambda g: self.new_group(g))
+        self.notifications.notif_clicked.connect(lambda notif: self.notif_clicked(notif))
 
         # agregar usuarios conectados
-        self.contacts_popover.add_contact("Juan", "images/user.png")
-        self.contacts_popover.add_contact("María", "images/user.png")
-        self.contacts_popover.add_contact("Luis", "images/user.png")
+        self.contacts_popover.add_contact(1, "Juan", "images/user2.png")
+        self.contacts_popover.add_contact(2, "María", "images/user3.png")
+        self.contacts_popover.add_contact(3, "Luis", "images/user5.png")
 
-        # Agregar chats a la izquierda
-        """for i in range(20):
-            self.notifications.add_notification(
-                "images/user.png",
-                f"WhatsApp {i+1}",
-                "New: Schedule your next call 📅 Easily plan meetings with your contacts.",
-                "09/10/25"
-            )
-        """
 
         self.ui.sendButton.clicked.connect(self.sendMessage)
         self.ui.chat_text_box.returnPressed.connect(self.sendMessage)
         self.ui.emojiButton.clicked.connect(self.show_emoji_popover)
 
     def new_group(self, grupo):
-        self.contacts_popover.add_contact(grupo['group_name'], "images/user.png")
+        #self.contacts_popover.add_contact(grupo['group_name'], "images/user.png")
+
+        groups = ["images/group.png","images/group1.png","images/group2.png","images/group3.png"]
 
         # Add to active chats
         today = date.today()
         formatted_date = today.strftime("%m/%d/%y")
-        notif = self.notifications.add_notification(
-            "images/user.png",
+        self.notifications.add_notification(
+            random.choice(groups),
             f"{grupo['group_name']}",
             "New group",
             f"{formatted_date}"
         )
-        notif.clicked.connect(lambda: print("Notification clicked!"))
 
+    def notif_clicked(self, notif):
+        # current chat title
+        self.ui.curent_chat_label.setText(notif['title'])
+
+        # current chat icon
+        pixmap = QPixmap(notif['icon_path']).scaled(48, 48, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+        self.ui.current_chat_icon.setFixedSize(48, 48)
+        self.ui.current_chat_icon.setStyleSheet("background: transparent;")
+        self.ui.current_chat_icon.setPixmap(pixmap)
+
+        print(notif)
+
+    def contact_clicked(self,data):
+        # Add to active chats
+        today = date.today()
+        formatted_date = today.strftime("%m/%d/%y")
+        self.notifications.add_notification(
+                data['image'],
+                f"{data['name']}",
+                "",
+                f"{formatted_date}"
+        )
 
     def sendMessage(self):
         self.ui.active_chat.add_message("Tu", self.emoji_mapper(self.ui.chat_text_box.text()), True)

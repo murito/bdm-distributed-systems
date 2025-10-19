@@ -149,7 +149,7 @@
     <string/>
    </property>
   </widget>
-  <widget class="QLabel" name="label_2">
+  <widget class="QLabel" name="current_chat_icon">
    <property name="geometry">
     <rect>
      <x>290</x>
@@ -162,7 +162,7 @@
     <string>Avatar</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_3">
+  <widget class="QLabel" name="curent_chat_label">
    <property name="geometry">
     <rect>
      <x>360</x>

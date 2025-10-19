@@ -65,12 +65,12 @@ class Ui_Chat(object):
         self.newChatBtn = QPushButton(Chat)
         self.newChatBtn.setObjectName(u"newChatBtn")
         self.newChatBtn.setGeometry(QRect(220, 5, 51, 31))
-        self.label_2 = QLabel(Chat)
-        self.label_2.setObjectName(u"label_2")
-        self.label_2.setGeometry(QRect(290, 10, 58, 16))
-        self.label_3 = QLabel(Chat)
-        self.label_3.setObjectName(u"label_3")
-        self.label_3.setGeometry(QRect(360, 10, 761, 16))
+        self.current_chat_icon = QLabel(Chat)
+        self.current_chat_icon.setObjectName(u"current_chat_icon")
+        self.current_chat_icon.setGeometry(QRect(290, 10, 58, 16))
+        self.curent_chat_label = QLabel(Chat)
+        self.curent_chat_label.setObjectName(u"curent_chat_label")
+        self.curent_chat_label.setGeometry(QRect(360, 10, 761, 16))
 
         self.retranslateUi(Chat)
 
@@ -84,7 +84,7 @@ class Ui_Chat(object):
         self.emojiButton.setText("")
         self.sendButton.setText("")
         self.newChatBtn.setText("")
-        self.label_2.setText(QCoreApplication.translate("Chat", u"Avatar", None))
-        self.label_3.setText(QCoreApplication.translate("Chat", u"Current chat", None))
+        self.current_chat_icon.setText(QCoreApplication.translate("Chat", u"Avatar", None))
+        self.curent_chat_label.setText(QCoreApplication.translate("Chat", u"Current chat", None))
     # retranslateUi
 
