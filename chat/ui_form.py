@@ -84,7 +84,7 @@ class Ui_Chat(object):
         self.emojiButton.setText("")
         self.sendButton.setText("")
         self.newChatBtn.setText("")
-        self.current_chat_icon.setText(QCoreApplication.translate("Chat", u"Avatar", None))
-        self.curent_chat_label.setText(QCoreApplication.translate("Chat", u"Current chat", None))
+        self.current_chat_icon.setText(QCoreApplication.translate("Chat", u"...", None))
+        self.curent_chat_label.setText(QCoreApplication.translate("Chat", u"...", None))
     # retranslateUi
 

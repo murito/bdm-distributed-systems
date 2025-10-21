@@ -69,6 +69,11 @@ class NotificationWidget(QWidget):
         self.desc_label.setText(description)
         self.date_label.setText(date)
 
+    def update_description(self, new_description):
+        """Actualiza la descripción de la notificación."""
+        self.data["description"] = new_description
+        self.desc_label.setText(new_description)
+
     # -----------------------------------------------------------------
     # Animaciones y eventos
     # -----------------------------------------------------------------

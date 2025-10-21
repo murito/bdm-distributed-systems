@@ -7,3 +7,11 @@ video_stream_app/.qtcreator/
 video_stream_app/__pycache__/
 chat/.qtcreator/
 chat/__pycache__/
+chat_server/.qtcreator/
+chat_server/__pycache__/
+chat_server/server.crt
+chat_server/server.key
+chat/server.crt
+chat/client.crt
+chat/server.key
+chat/client.key

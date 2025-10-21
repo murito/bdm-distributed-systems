@@ -143,6 +143,8 @@ class ContactsPopover(QFrame):
             }
         """)
 
+        self.current_group_id = None  # 🔹 nuevo campo
+
         layout = QVBoxLayout(self)
         layout.setContentsMargins(10, 10, 10, 10)
         layout.setSpacing(8)
@@ -160,6 +162,35 @@ class ContactsPopover(QFrame):
         # Lista de contactos
         self.contacts = []
         self.create_btn.clicked.connect(self.on_create_group)
+
+
+    def on_create_group(self):
+        """Cuando el usuario presiona 'Create'."""
+        members = self.get_selected_members()
+        group_name = self.group_name_box.text().strip()
+        if not group_name or not members:
+            return
+
+        data = {
+            "group_id": None,  # 🔹 el servidor la llenará después
+            "group_name": group_name,
+            "members": members
+        }
+        self.group_created.emit(data)
+        self.reset_group_page()
+        self.go_to_contacts_page()
+        self.close()
+
+    # 🔹 Nuevo método para actualizar desde el servidor
+    def on_group_created_from_server(self, group_data):
+        """
+        Llamado cuando el servidor confirma la creación del grupo y asigna ID.
+        group_data = { "group_id": "...", "group_name": "...", "members": [...] }
+        """
+        print(f"Grupo creado por servidor: {group_data}")
+        self.current_group_id = group_data.get("group_id")
+        # Aquí podrías actualizar una lista visual de grupos si la tienes,
+        # o simplemente emitir una señal global si tu app la necesita.
 
     # ---------------- CONTACTS PAGE ----------------
     def setup_contacts_page(self):
@@ -242,9 +273,10 @@ class ContactsPopover(QFrame):
         return self.contacts
 
     def add_contact(self, contact_id, name, image_path=None):
-        new_contact = {"id": contact_id, "name": name, "image": image_path or "images/user.png"}
-        self.contacts.append(new_contact)
-        self.set_contacts(self.contacts)
+        if not any(item.get("id") == contact_id for item in self.contacts):
+            new_contact = {"id": contact_id, "name": name, "image": image_path or "images/user.png"}
+            self.contacts.append(new_contact)
+            self.set_contacts(self.contacts)
 
     def get_selected_members(self):
         members = []

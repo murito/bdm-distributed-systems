@@ -2,4 +2,4 @@
 name = "Chat"
 
 [tool.pyside6-project]
-files = ["chat-item.qss", "chat.py", "chat_area.py", "chat_bubble.py", "contacts_popover.py", "emoji_popover.py", "form.ui", "notification_list_widget.py", "notification_widget.py", "utils.py"]
+files = ["chat-item.qss", "chat.py", "chat_area.py", "chat_bubble.py", "chat_tcp_client.py", "contacts_popover.py", "emoji_popover.py", "form.ui", "notification_list_widget.py", "notification_widget.py", "user_setup_dialog.py", "utils.py"]

@@ -159,7 +159,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Avatar</string>
+    <string>...</string>
    </property>
   </widget>
   <widget class="QLabel" name="curent_chat_label">
@@ -172,7 +172,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Current chat</string>
+    <string>...</string>
    </property>
   </widget>
  </widget>

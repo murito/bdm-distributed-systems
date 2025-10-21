@@ -38,5 +38,17 @@ class NotificationListWidget(QWidget):
 
         return notif
 
+    def update_description(self, notif_id, new_description):
+        """Actualiza la descripción de la notificación con el ID dado."""
+        notif = self.notifications.get(notif_id)
+        if notif:
+            notif.update_description(new_description)
+        else:
+            print(f"⚠️ No se encontró notificación con ID '{notif_id}'")
+
     def clicked(self, notif):
         self.notif_clicked.emit(notif)
+
+    def exists(self, notif_id):
+        """Devuelve True si existe una notificación con el ID dado."""
+        return notif_id in self.notifications
