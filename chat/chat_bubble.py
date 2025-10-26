@@ -131,13 +131,22 @@ class FileBubble(QWidget):
             self.progress_label.setText("Completado ✅")
             self.progress_label.setCursor(QCursor(Qt.ArrowCursor))
 
+    def setup_click(self, local_path=None):
+            """Asigna evento click y cursor para abrir archivo/carpeta."""
+            if local_path and os.path.exists(local_path):
+                self.local_path = local_path
+                self.progress_label.setText("✅ Abrir archivo")
+                self.progress_label.setCursor(QCursor(Qt.PointingHandCursor))
+                self.progress_label.mousePressEvent = lambda e: self._open_file()
+            elif self.completed:
+                self.progress_label.setText("Completado ✅")
+                self.progress_label.setCursor(QCursor(Qt.ArrowCursor))
+
     def _open_file(self):
         if not self.local_path:
             print("⚠️ No hay ruta local para abrir.")
             return
 
-        """path = os.path.abspath(self.local_path)
-        folder = os.path.dirname(path)"""
         path = f"{DOWNLOADS_DIR}/{self.user_id}/"
         folder = os.path.dirname(path)
 

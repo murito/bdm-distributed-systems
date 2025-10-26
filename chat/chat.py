@@ -16,6 +16,7 @@ from chat_tcp_client import ChatTCPClient
 
 today = date.today().strftime("%m/%d/%y")
 group_images = ["images/group.png", "images/group1.png", "images/group2.png", "images/group3.png"]
+DOWNLOADS_DIR = os.path.join(os.getcwd(), "downloads")
 
 class Chat(QWidget):
     def __init__(self, parent=None):
@@ -58,6 +59,7 @@ class Chat(QWidget):
         # { user_id: [ {type: "text"/"file", sender_name:, text:, filename:, file_id:, local_path:, is_sender:bool, client_tag:optional}, ... ] }
         self.chat_history = {}
         self.active_user = None
+        self.users_dict = {}
 
         # --- Estilos ---
         with open("chat-item.qss", "r") as f:
@@ -116,6 +118,7 @@ class Chat(QWidget):
         for user in users:
             if user['id'] != self.tcp_client.user_id:
                 self.contacts_popover.add_contact(user['id'], user['username'], user['avatar'])
+                self.users_dict[user['id']] = user['username']
 
     def receive_message(self, msg):
         if msg['from'] == self.active_user:
@@ -214,6 +217,9 @@ class Chat(QWidget):
                     # if we have stored progress, update it
                     if "progress" in entry:
                         self.ui.active_chat.update_progress(entry["file_id"], entry["progress"])
+                    # 🔹 restaurar click si ya se descargó
+                    if "local_path" in entry and entry["local_path"]:
+                        fb.setup_click(entry["local_path"])
 
     # ----------------------------
     # Envío de mensajes
@@ -315,16 +321,18 @@ class Chat(QWidget):
                 existing["filename"] = filename
                 existing["filesize"] = filesize
             else:
+                name = self.users_dict[initiator] if initiator in self.users_dict else "Alguien"
                 # crear nueva entrada en historial con display_id (puede ser client_tag temporal)
                 entry = {
                     "type": "file",
-                    "sender_name": ("Tú" if initiator == self.tcp_client.user_id else msg.get("username", "Alguien")),
+                    "sender_name": ("Tú" if initiator == self.tcp_client.user_id else msg.get("username", name)),
                     "filename": filename,
                     "file_id": display_id,
                     "is_sender": initiator == self.tcp_client.user_id,
                     "progress": 0,
                     "client_tag": client_tag if client_tag else None,
-                    "filesize": filesize
+                    "filesize": filesize,
+                    "local_path": f"{DOWNLOADS_DIR}/{self.tcp_client.user_id}/"
                 }
                 self.chat_history[chat_id].append(entry)
 
@@ -401,7 +409,7 @@ class Chat(QWidget):
         elif mtype == "file_completed":
             file_id = msg.get("file_id")
             filename = msg.get("filename")
-            downloads_dir = os.path.join(os.getcwd(), "downloads")
+            downloads_dir = os.path.join(os.getcwd(), f"downloads/{self.tcp_client.user_id}")
             local_path = os.path.join(downloads_dir, f"{file_id}_{filename}")
 
             # mark completed in histories and attach local_path
