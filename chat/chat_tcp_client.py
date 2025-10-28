@@ -36,9 +36,9 @@ def generate_self_signed_cert(certfile, keyfile):
         ))
     subject = issuer = x509.Name([
         x509.NameAttribute(NameOID.COUNTRY_NAME, u"MX"),
-        x509.NameAttribute(NameOID.STATE_OR_PROVINCE_NAME, u"Estado"),
-        x509.NameAttribute(NameOID.LOCALITY_NAME, u"Ciudad"),
-        x509.NameAttribute(NameOID.ORGANIZATION_NAME, u"MiCliente"),
+        x509.NameAttribute(NameOID.STATE_OR_PROVINCE_NAME, u"Jalisco"),
+        x509.NameAttribute(NameOID.LOCALITY_NAME, u"Guadalajara"),
+        x509.NameAttribute(NameOID.ORGANIZATION_NAME, u"NopalTech"),
         x509.NameAttribute(NameOID.COMMON_NAME, u"localhost"),
     ])
     cert = x509.CertificateBuilder().subject_name(subject).issuer_name(issuer)\
@@ -163,11 +163,11 @@ class ChatTCPClient(QObject):
                     initiator = msg.get("initiator")
                     client_tag = msg.get("client_tag")
 
-                    # ✅ El SENDER no crea archivo (ya lo tiene)
+                    # El SENDER no crea archivo (ya lo tiene)
                     if initiator == self.user_id:
                         print(f"[CLIENT {self.user_id}] Soy quien envía → NO crear archivo local ({filename})")
                     else:
-                        # ✅ Guardar descargas por usuario
+                        # Guardar descargas por usuario
                         user_folder = os.path.join("Downloads", self.user_id)
                         os.makedirs(user_folder, exist_ok=True)
 
@@ -180,8 +180,7 @@ class ChatTCPClient(QObject):
                         pu = self.pending_uploads[client_tag]
                         with pu["lock"]:
                             pu["file_id"] = file_id
-                            # ❌ Antes se lanzaba en todos los clientes
-                            # ✅ Ahora solo el initiator lo sube
+                            # solo el initiator lo sube
                             if not pu.get("uploader_running") and self.user_id == initiator:
                                 pu["uploader_running"] = True
                                 threading.Thread(target=self._upload_file_worker, args=(client_tag, file_id), daemon=True).start()
@@ -198,7 +197,7 @@ class ChatTCPClient(QObject):
                     if not file_id or not chunk:
                         continue
 
-                    # ✅ Ignorar si soy el que envía el archivo
+                    # Ignorar si soy el que envía el archivo
                     if initiator == self.user_id:
                         continue
 
@@ -209,7 +208,7 @@ class ChatTCPClient(QObject):
                     rf = self.receiving_files[file_id]
                     written = rf.write_chunk(chunk, seq)
 
-                    # opcional: log detallado para debug (descomentar si necesitas trazas)
+                    # debug
                     # print(f"[CLIENT {self.user_id}] recv chunk file={file_id} seq={seq} written={written} total_written={rf.bytes_received}")
 
                     self.file_transfer_update.emit({
@@ -238,16 +237,16 @@ class ChatTCPClient(QObject):
                             "type": "file_completed",
                             "file_id": file_id,
                             "filename": rf.filename,
-                            "local_path": rf.path  # ✅ aseguramos ruta local correcta
+                            "local_path": rf.path  # aseguramos ruta local correcta
                         }
 
-                        # ✅ Esto actualiza la UI para cambiar a estado de completado
+                        # Esto actualiza la UI para cambiar a estado de completado
                         self.file_transfer_update.emit(completed_evt)
 
-                        # ✅ Esto permite al usuario hacer click para abrir carpeta/archivo
+                        # Esto permite al usuario hacer click para abrir carpeta/archivo
                         self.file_received.emit(completed_evt)
 
-                        # ✅ Eliminamos el registro ya que terminó correctamente
+                        # Eliminamos el registro ya que terminó correctamente
                         del self.receiving_files[file_id]
 
                 # --- Grupos ---

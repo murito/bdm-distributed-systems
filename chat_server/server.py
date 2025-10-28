@@ -46,9 +46,9 @@ def generate_self_signed_cert(certfile, keyfile):
         ))
     subject = issuer = x509.Name([
         x509.NameAttribute(NameOID.COUNTRY_NAME, u"MX"),
-        x509.NameAttribute(NameOID.STATE_OR_PROVINCE_NAME, u"Estado"),
-        x509.NameAttribute(NameOID.LOCALITY_NAME, u"Ciudad"),
-        x509.NameAttribute(NameOID.ORGANIZATION_NAME, u"Servidor"),
+        x509.NameAttribute(NameOID.STATE_OR_PROVINCE_NAME, u"Jalisco"),
+        x509.NameAttribute(NameOID.LOCALITY_NAME, u"Guadalajara"),
+        x509.NameAttribute(NameOID.ORGANIZATION_NAME, u"NopalTech"),
         x509.NameAttribute(NameOID.COMMON_NAME, u"localhost"),
     ])
     cert = x509.CertificateBuilder().subject_name(subject).issuer_name(issuer)\

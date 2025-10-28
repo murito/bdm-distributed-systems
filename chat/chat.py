@@ -45,11 +45,8 @@ class Chat(QWidget):
             self.tcp_client.message_received.connect(self.receive_message)
             self.tcp_client.group_message_received.connect(self.receive_group_message)
             self.tcp_client.file_received.connect(self.receive_file)
-            # nuevo: escucha eventos de archivo (started/progress/completed/file_chunk)
             self.tcp_client.file_transfer_update.connect(self.on_file_transfer_update)
-
             self.tcp_client.added_to_group.connect(lambda msg: self.new_group_added(msg))
-
 
             self.tcp_client.connect_to_server()
         else:
@@ -167,7 +164,7 @@ class Chat(QWidget):
             else:
                 self.tcp_client.send_file(target_id=self.active_user, group_id=None, file_path=file_path)
 
-            # Feedback visual: notificación temporal (NO crear burbuja aquí; la UI se creará desde file_started (local o server))
+            #  notificación temporal (NO crear burbuja aquí; la UI se creará desde file_started (local o server))
             if not self.notifications.exists(self.active_user):
                 self.notifications.add_notification("", "Enviando archivo...", "Preparando...", today, self.active_user)
 
@@ -365,7 +362,6 @@ class Chat(QWidget):
             filename = msg.get("filename", "file")
             initiator = msg.get("initiator")
 
-            # VARIANTE A: raw data (server forwarded bytes)
             if "data" in msg:
                 downloads_dir = os.path.join(os.getcwd(), "downloads")
                 os.makedirs(downloads_dir, exist_ok=True)
@@ -377,7 +373,7 @@ class Chat(QWidget):
                     print("Error escribiendo chunk (variant data):", e)
                 return
 
-            # VARIANTE B: cliente ya escribió chunk y envía bytes_received (events from client)
+
             if "bytes_received" in msg:
                 bytes_recv = msg.get("bytes_received", 0)
                 total_bytes = msg.get("total_bytes", None)
